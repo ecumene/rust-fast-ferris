@@ -6,9 +6,9 @@ use amethyst::{
     renderer::{Camera, ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture},
 };
 
-use collision::Aabb2;
+// use collision::Aabb2;
 
-use rand::{Rng, ThreadRng};
+use rand::{Rng, rngs::ThreadRng};
 
 pub const SCREEN_HEIGHT: f32 = 100.0;
 pub const SCREEN_WIDTH: f32 = 200.0;
@@ -21,14 +21,14 @@ impl Component for Rustacean {
     type Storage = DenseVecStorage<Self>;
 }
 
-#[derive(Default)]
-pub struct BadTouch {
-    pub bounding: Aabb2,
-}
+// #[derive(Default)]
+// pub struct BadTouch {
+    // pub bounding: Aabb2,
+// }
 
-impl Component for BadTouch {
-    type Storage = DenseVecStorage<Self>;
-}
+// impl Component for BadTouch {
+    // type Storage = DenseVecStorage<Self>;
+// }
 
 #[derive(Default)]
 pub struct Parallax {
@@ -130,7 +130,6 @@ fn initialise_coral(
             width: 16.0,
         })
         .with(left_transform)
-        .with(BadTouch {})
         .build();
 }
 
