@@ -1,20 +1,32 @@
 use amethyst::{
     core::{timing::Time, Transform},
     derive::SystemDesc,
-    ecs::{Entities, Join, Read, ReadStorage, System, SystemData, WriteStorage},
+    ecs::{Join, Read, ReadStorage, System, SystemData, Write},
 };
 
-use crate::ferris::{BadTouch, Rustacean};
+use crate::ferris::{BadTouch, Rustacean, Scoreboard};
 
 #[derive(SystemDesc)]
-pub struct ParallaxSystem;
+pub struct CollisionSystem;
 
-impl<'s> System<'s> for ParallaxSystem {
-    type SystemData = (ReadStorage<'s, BadTouch>, ReadStorage<'s, Rustacean>);
+impl<'s> System<'s> for CollisionSystem {
+    type SystemData = (
+        ReadStorage<'s, BadTouch>,
+        ReadStorage<'s, Transform>,
+        ReadStorage<'s, Rustacean>,
+        Write<'s, Scoreboard>,
+    );
 
-    fn run(&mut self, (mut transforms, parallax, time): Self::SystemData) {
-        for (transform, parallax) in (&mut transforms, &parallax).join() {
-            
+    fn run(&mut self, (bads, transforms, rustaceans, mut scoreboard): Self::SystemData) {
+        for (_bad, bad_transform) in (&bads, &transforms).join() {
+            for (_rustacean, transform) in (&rustaceans, &transforms).join() {
+                if scoreboard.winning && transform.translation().y < 10.0
+                    && (bad_transform.translation().x) < (transform.translation().x + 10.0)
+                    && (bad_transform.translation().x + 8.0) > (transform.translation().x)
+                {
+                    scoreboard.winning = false;
+                }
+            }
         }
     }
 }

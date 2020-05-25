@@ -7,6 +7,7 @@ use amethyst::{
         types::DefaultBackend,
         RenderingBundle,
     },
+    ui::{RenderUi, UiBundle},
     utils::application_root_dir,
 };
 
@@ -35,21 +36,21 @@ fn main() -> amethyst::Result<()> {
                     RenderToWindow::from_config_path(display_config_path)?
                         .with_clear([1.0, 1.0, 1.0, 1.0]),
                 )
+                .with_plugin(RenderUi::default())
                 .with_plugin(RenderFlat2D::default()),
         )?
         .with_bundle(TransformBundle::new())?
         .with_bundle(input_bundle)?
         .with(systems::JumpSystem, "jump_system", &["input_system"])
         .with(systems::ParallaxSystem, "coral_system", &[])
+        .with(systems::CollisionSystem, "collision_system", &[])
+        .with(systems::ScoreCheckSystem, "score_check", &[])
+        .with_bundle(UiBundle::<StringBindings>::new())?
         .with(systems::GravitySystem, "gravity_system", &[]);
 
     let mut game = Application::new(
         assets_dir,
-        Ferris {
-            rng: rand::thread_rng(),
-            object_spritesheet: None,
-            coral_timer: None,
-        },
+        Ferris::new(),
         game_data,
     )?;
     game.run();
