@@ -38,8 +38,13 @@ impl Component for ScoreText {
     type Storage = DenseVecStorage<Self>;
 }
 
-#[derive(Default)]
+pub enum OutOfScreenAction {
+    REVIVE { vertical: bool, horizontal: bool },
+    DELETE,
+}
+
 pub struct Parallax {
+    pub on_out_of_screen: OutOfScreenAction,
     pub factor: f32,
     pub width: f32,
 }
@@ -121,7 +126,7 @@ fn initialise_ground(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>
         sprite_number: 7,
     };
 
-    let num_grounds = 14;
+    let num_grounds = 15;
 
     for n in 1..num_grounds {
         let mut left_transform = Transform::default();
@@ -135,6 +140,14 @@ fn initialise_ground(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>
         world
             .create_entity()
             .with(sprite_render.clone())
+            .with(Parallax {
+                on_out_of_screen: OutOfScreenAction::REVIVE {
+                    vertical: false,
+                    horizontal: true,
+                },
+                factor: 80.0,
+                width: 16.0,
+            })
             .with(left_transform)
             .build();
     }
@@ -152,12 +165,13 @@ fn initialise_coral(
 
     let mut left_transform = Transform::default();
     left_transform.set_scale(Vector3::new(0.5, 0.5, 0.5));
-    left_transform.set_translation_xyz(SCREEN_WIDTH * 0.5 - 16.0, 0.0, 0.0);
+    left_transform.set_translation_xyz(SCREEN_WIDTH * 0.5 + 16.0, 0.0, 0.0);
 
     world
         .create_entity()
         .with(sprite_render)
         .with(Parallax {
+            on_out_of_screen: OutOfScreenAction::DELETE,
             factor: 80.0,
             width: 16.0,
         })

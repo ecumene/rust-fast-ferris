@@ -4,7 +4,7 @@ use amethyst::{
     ecs::{Entities, Join, Read, ReadStorage, System, SystemData, WriteStorage},
 };
 
-use crate::ferris::{Parallax, Scoreboard, SCREEN_WIDTH};
+use crate::ferris::{OutOfScreenAction, Parallax, Scoreboard, SCREEN_WIDTH};
 
 #[derive(SystemDesc)]
 pub struct ParallaxSystem;
@@ -25,10 +25,20 @@ impl<'s> System<'s> for ParallaxSystem {
                 if new_x > (-SCREEN_WIDTH - parallax.width) * 0.5 {
                     transform.set_translation_x(new_x);
                 } else {
-                    match entities.delete(e) {
-                        Ok(_v) => {}
-                        Err(e) => println!("{} {:?}", "Wrong Generation Error", e),
-                    };
+                    match parallax.on_out_of_screen {
+                        OutOfScreenAction::REVIVE {
+                            vertical,
+                            horizontal,
+                        } => {
+                            transform.set_translation_x((SCREEN_WIDTH + parallax.width) * 0.5);
+                        }
+                        OutOfScreenAction::DELETE => {
+                            match entities.delete(e) {
+                                Ok(_v) => {}
+                                Err(e) => println!("{} {:?}", "Wrong Generation Error", e),
+                            };
+                        }
+                    }
                 }
             }
         }
