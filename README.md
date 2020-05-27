@@ -1,8 +1,10 @@
-# fast-ferris2
+# Fast Ferris
+
+![demo.gif](demo.gif)
 
 ## How to run
 
-To run the game, run the following command, which defaults to the `vulkan` graphics backend:
+To run the game, run the following command, which defaults to the `metal` graphics backend:
 
 ```bash
 cargo run
