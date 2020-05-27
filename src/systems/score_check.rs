@@ -1,5 +1,5 @@
 use amethyst::{
-    core::{timing::Time, Transform},
+    core::timing::Time,
     derive::SystemDesc,
     ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage},
     ui::UiText,
@@ -19,7 +19,7 @@ impl<'s> System<'s> for ScoreCheckSystem {
     );
 
     fn run(&mut self, (mut ui_texts, time, scoreboard, score): Self::SystemData) {
-        if (scoreboard.winning) {
+        if scoreboard.winning {
             for (ui_text, _score) in (&mut ui_texts, &score).join() {
                 ui_text.text = format!(
                     "{}",

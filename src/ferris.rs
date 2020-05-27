@@ -132,7 +132,7 @@ fn initialise_ground(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>
         let mut left_transform = Transform::default();
         left_transform.set_scale(Vector3::new(0.5, 0.5, 0.5));
         left_transform.set_translation_xyz(
-            (OBJECT_SIZE * n as f32 - 100.0 - OBJECT_SIZE),
+            OBJECT_SIZE * n as f32 - 100.0 - OBJECT_SIZE,
             -OBJECT_SIZE * 0.5,
             0.0,
         );

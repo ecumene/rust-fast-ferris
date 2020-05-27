@@ -27,8 +27,8 @@ impl<'s> System<'s> for ParallaxSystem {
                 } else {
                     match parallax.on_out_of_screen {
                         OutOfScreenAction::REVIVE {
-                            vertical,
-                            horizontal,
+                            vertical: _,
+                            horizontal: _,
                         } => {
                             transform.set_translation_x((SCREEN_WIDTH + parallax.width) * 0.5);
                         }
